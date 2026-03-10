@@ -63,68 +63,68 @@ async function uploadRequest<T>(path: string, file: File): Promise<T> {
 
 export const authApi = {
   signup: (email: string, password: string, name: string) =>
-    request<{ token: string }>("/auth/signup", {
+    request<{ token: string }>("/api/v1/auth/signup", {
       method: "POST",
       body: JSON.stringify({ email, password, name }),
     }),
 
   login: (email: string, password: string) =>
-    request<{ token: string }>("/auth/login", {
+    request<{ token: string }>("/api/v1/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     }),
 };
 
 export const userApi = {
-  getMe: () => request<User>("/users/me"),
+  getMe: () => request<User>("/api/v1/users/me"),
   updateMe: (name: string) =>
-    request<User>("/users/me", {
+    request<User>("/api/v1/users/me", {
       method: "PUT",
       body: JSON.stringify({ name }),
     }),
-  deleteMe: () => request<null>("/users/me", { method: "DELETE" }),
+  deleteMe: () => request<null>("/api/v1/users/me", { method: "DELETE" }),
 };
 
 export const todoApi = {
-  getTodos: () => request<TodoListItem[]>("/todos"),
+  getTodos: () => request<TodoListItem[]>("/api/v1/todos"),
 
-  getTodo: (id: number) => request<Todo>(`/todos/${id}`),
+  getTodo: (id: number) => request<Todo>(`/api/v1/todos/${id}`),
 
   createTodo: (title: string, description?: TiptapJSON | null, dueDate?: string | null) =>
-    request<Todo>("/todos", {
+    request<Todo>("/api/v1/todos", {
       method: "POST",
       body: JSON.stringify({ title, description, dueDate }),
     }),
 
   updateTodo: (id: number, title: string, description?: TiptapJSON | null, dueDate?: string | null) =>
-    request<Todo>(`/todos/${id}`, {
+    request<Todo>(`/api/v1/todos/${id}`, {
       method: "PUT",
       body: JSON.stringify({ title, description, dueDate }),
     }),
 
   toggleTodo: (id: number) =>
-    request<Todo>(`/todos/${id}/toggle`, { method: "PATCH" }),
+    request<Todo>(`/api/v1/todos/${id}/toggle`, { method: "PATCH" }),
 
   deleteTodo: (id: number) =>
-    request<null>(`/todos/${id}`, { method: "DELETE" }),
+    request<null>(`/api/v1/todos/${id}`, { method: "DELETE" }),
 
   getCompletedByDate: (date: string) =>
-    request<TodoListItem[]>(`/todos/completed?date=${date}`),
+    request<TodoListItem[]>(`/api/v1/todos/completed?date=${date}`),
 
   getAttachments: (todoId: number) =>
-    request<TodoAttachment[]>(`/todos/${todoId}/attachments`),
+    request<TodoAttachment[]>(`/api/v1/todos/${todoId}/attachments`),
 
   addAttachment: (todoId: number, data: { fileUrl: string; fileName: string; fileSize: number }) =>
-    request<TodoAttachment>(`/todos/${todoId}/attachments`, {
+    request<TodoAttachment>(`/api/v1/todos/${todoId}/attachments`, {
       method: "POST",
       body: JSON.stringify(data),
     }),
 
   deleteAttachment: (todoId: number, attachmentId: number) =>
-    request<null>(`/todos/${todoId}/attachments/${attachmentId}`, { method: "DELETE" }),
+    request<null>(`/api/v1/todos/${todoId}/attachments/${attachmentId}`, { method: "DELETE" }),
 };
 
 export const uploadApi = {
   uploadImage: (file: File) =>
-    uploadRequest<UploadResponse>("/uploads/image", file),
+    uploadRequest<UploadResponse>("/api/v1/uploads/image", file),
 };

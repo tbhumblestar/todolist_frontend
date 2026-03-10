@@ -54,7 +54,7 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps) => {
       </button>
 
       <a
-        href={`${API_URL}/auth/oauth2/google`}
+        href={`${API_URL}/api/v1/auth/oauth2/google`}
         className="flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] py-3 font-medium text-[var(--text)] transition hover:bg-[var(--surface2)]"
       >
         Google로 로그인
