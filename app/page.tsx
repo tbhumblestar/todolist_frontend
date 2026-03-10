@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
@@ -25,9 +25,21 @@ const formatDisplay = (dateStr: string) => {
   return `${Number(m)}월 ${Number(d)}일`;
 };
 
+function OAuthTokenHandler() {
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      authStorage.setToken(token);
+      window.history.replaceState({}, "", "/");
+      window.location.reload();
+    }
+  }, [searchParams]);
+  return null;
+}
+
 export default function Home() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user, isLoading: authLoading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { todos, isLoading: todosLoading, createTodo, updateTodo, toggleTodo, deleteTodo } =
@@ -130,16 +142,6 @@ export default function Home() {
     };
   }, []);
 
-  // Handle OAuth callback token
-  useEffect(() => {
-    const token = searchParams.get("token");
-    if (token) {
-      authStorage.setToken(token);
-      window.history.replaceState({}, "", "/");
-      window.location.reload();
-    }
-  }, [searchParams]);
-
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!authLoading && !authStorage.isLoggedIn()) {
@@ -161,6 +163,9 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-xl px-4 py-12">
+      <Suspense fallback={null}>
+        <OAuthTokenHandler />
+      </Suspense>
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Todo List</h1>
         <div className="flex items-center gap-3">
